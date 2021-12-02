@@ -9,13 +9,13 @@ fn main() {
             (tokens[0].to_string(), tokens[1].parse::<i32>().unwrap())
         });
 
-        let (fwd, depth, _) = tuples.fold((0, 0, 0), |acc, x| {
-            let (fwd, depth, aim) = acc;
+        let (fwd, depth) = tuples.fold((0, 0), |acc, x| {
+            let (fwd, depth) = acc;
             let (command, i) = x;
             match command.as_str() {
-                "forward" => (fwd + i, depth + (i * aim), aim),
-                "down" => (fwd, depth, aim + i),
-                "up" => (fwd, depth, aim - i),
+                "forward" => (fwd + i, depth),
+                "down" => (fwd, depth + i),
+                "up" => (fwd, depth - i),
                 _ => panic!("at the disco"),
             }
         });
