@@ -32,11 +32,17 @@ fn main() {
             .collect::<Vec<Vec<Vec<(i32, bool)>>>>();
 
         for number in numbers.first().unwrap() {
+            boards = boards
+                .iter_mut()
+                .filter(|b| !is_solved(b))
+                .map(|x| x.clone())
+                .collect::<Vec<Vec<Vec<(i32, bool)>>>>();
+
             for x in 0..boards.len() {
                 let board = &mut boards[x];
                 mark_number(number, board);
                 let board = &boards[x];
-                if is_solved(board) {
+                if boards.len() == 1 && is_solved(board) {
                     let sum: i32 = board
                         .iter()
                         .map(|row| {
@@ -94,22 +100,6 @@ fn is_solved(board: &Vec<Vec<(i32, bool)>>) -> bool {
 
     return false;
 }
-
-// fn is_solved(board: &Vec<Vec<(i32, bool)>>) -> bool {
-//     for i in 0..5 {
-//         if board[i].iter().all(|(_, chosen)| chosen == &true) {
-//             return true;
-//         }
-//         if (0..5).all(|j| {
-//             let (_, chosen) = board[i][j];
-//             chosen == true
-//         }) {
-//             return true;
-//         }
-//     }
-
-//     return false;
-// }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
