@@ -18,7 +18,7 @@ fn calc_answer(input: Vec<String>) -> usize {
         .map(|l| {
             let mut xy = l
                 .split(" -> ")
-                .map(|x| x.split(',').map(|n| n.parse::<i32>().unwrap()));
+                .map(|x| x.split(',').map(|n| n.parse::<usize>().unwrap()));
             let mut xy1 = xy.next().unwrap();
             let mut xy2 = xy.next().unwrap();
             (
@@ -26,22 +26,29 @@ fn calc_answer(input: Vec<String>) -> usize {
                 (xy2.next().unwrap(), xy2.next().unwrap()),
             )
         })
-        .collect::<Vec<((i32, i32), (i32, i32))>>();
+        .filter(|c| {
+            let ((x1, y1), (x2, y2)) = c;
+            x1 == x2 || y1 == y2
+        })
+        .collect::<Vec<((usize, usize), (usize, usize))>>();
 
     let mut map: Vec<Vec<usize>> = vec![vec![0; 1000]; 1000];
 
     for coord in coords {
         let ((x1, y1), (x2, y2)) = coord;
-        let mut x = x1;
-        let mut y = y1;
-        let dx = (x2 - x1).signum();
-        let dy = (y2 - y1).signum();
-        while x != x2 || y != y2 {
-            map[y as usize][x as usize] += 1;
-            x += dx;
-            y += dy;
+        if x1 == x2 {
+            let min = std::cmp::min(y1, y2);
+            let max = std::cmp::max(y1, y2);
+            for y in min..=max {
+                map[x1][y] += 1;
+            }
+        } else {
+            let min = std::cmp::min(x1, x2);
+            let max = std::cmp::max(x1, x2);
+            for x in min..=max {
+                map[x][y1] += 1;
+            }
         }
-        map[y as usize][x as usize] += 1;
     }
 
     let answer: usize = map
@@ -76,5 +83,5 @@ fn it_works() {
         .map(|x| x.trim().into())
         .collect::<Vec<String>>();
     let ans = calc_answer(contents);
-    assert_eq!(ans, 12);
+    assert_eq!(ans, 5);
 }

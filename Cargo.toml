@@ -1,5 +1,5 @@
 [package]
-name = "rustAdventOfCode2021"
+name = "rust_advent_of_code2021"
 version = "0.1.0"
 edition = "2021"
 
