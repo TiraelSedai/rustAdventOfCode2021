@@ -16,7 +16,7 @@ fn main() {
         for move_to in min..=max {
             let need_fuel = initial
                 .iter()
-                .fold(0, |acc, x| acc + calc_move((x - move_to).abs()));
+                .fold(0, |acc, x| acc + (x - move_to).abs());
             if need_fuel < min_fuel {
                 min_fuel = need_fuel
             }

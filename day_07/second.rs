@@ -26,6 +26,7 @@ fn main() {
     }
 }
 
+// dirty brute force, not even memoizing known values
 fn calc_move(input: i32) -> i32 {
     (0..=input).fold(0, |acc, x| acc + x)
 }
