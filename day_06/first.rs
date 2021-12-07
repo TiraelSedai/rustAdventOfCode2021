@@ -19,7 +19,7 @@ fn main() {
             }
         }
 
-        for _ in 0..256 {
+        for _ in 0..80 {
             tick(&mut hash_map);
         }
 
