@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
@@ -5,29 +6,54 @@ use std::path::Path;
 fn main() {
     if let Ok(lines) = read_lines("data/input.txt") {
         let lines = lines.map(|x| x.unwrap()).collect::<Vec<String>>();
-        let initial = lines[0]
-            .split(',')
-            .map(|x| x.parse::<i32>().unwrap())
-            .collect::<Vec<i32>>();
-        let min: i32 = initial.iter().min().unwrap().clone();
-        let max = initial.iter().max().unwrap().clone();
-
-        let mut min_fuel = i32::MAX;
-        for move_to in min..=max {
-            let need_fuel = initial
-                .iter()
-                .fold(0, |acc, x| acc + calc_move((x - move_to).abs()));
-            if need_fuel < min_fuel {
-                min_fuel = need_fuel
-            }
+        let mut iter = lines.iter();
+        let template_chars = iter.next().unwrap().chars();
+        let initial_step = fill_initial_state(template_chars);
+        let mut modifier: HashMap<(char, char), char> = HashMap::new();
+        for rest in iter.filter(|x| !x.is_empty()) {
+            let mut s = rest.split(" -> ");
+            let mut from = s.next().unwrap().chars();
+            let left = from.next().unwrap();
+            let right = from.next().unwrap();
+            let to = s.next().unwrap().chars().next().unwrap();
+            modifier.insert((left, right), to);
         }
-
-        println!("need_fuel {}", min_fuel)
     }
 }
 
-fn calc_move(input: i32) -> i32 {
-    (0..=input).fold(0, |acc, x| acc + x)
+fn step(
+    state: &HashMap<(char, char), i32>,
+    modifier: &HashMap<(char, char), char>,
+) -> HashMap<(char, char), i32> {
+    let mut new_map: HashMap<(char, char), i32> = HashMap::new();
+    for ((a, b), amount) in state {
+        if let Some(m) = modifier.get(&(*a, *b)) {
+        } else {
+            continue;
+        }
+    }
+    new_map
+}
+
+fn fill_initial_state(chars: std::str::Chars) -> HashMap<(char, char), i32> {
+    let mut first_step: HashMap<(char, char), i32> = HashMap::new();
+    let mut prev: Option<char> = None;
+    for c in chars {
+        match prev {
+            None => {
+                prev = Some(c);
+                continue;
+            }
+            Some(p) => {
+                if let Some(v) = first_step.get_mut(&(p, c)) {
+                    *v += 1;
+                } else {
+                    first_step.insert((p, c), 1);
+                }
+            }
+        }
+    }
+    first_step
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
