@@ -27,7 +27,7 @@ fn main() {
 
         println!("{:?}", polymer);
 
-        for _i in 0..40 {
+        for _i in 0..10 {
             polymer = step(&polymer, &modifier);
         }
 
